@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/group_one">
+        <item
+            android:id="@+id/mnAdd"
+            android:title="@string/add" />
+        <item
+            android:id="@+id/mnDellAll"
+            android:title="@string/delete_all" />
+        <item
+            android:id="@+id/mnExit"
+            android:title="@string/exit" />
+        <item
+            android:id="@+id/mnSave"
+            android:title="@string/save_last" />
+        <item
+            android:id="@+id/mnLoad"
+            android:title="@string/load_last" />
+    </group>
+    <group android:id="@+id/group_two">
+        <item
+            android:id="@+id/mnDellAllEvent"
+            android:title="@string/delete_all" />
+    </group>
+</menu>

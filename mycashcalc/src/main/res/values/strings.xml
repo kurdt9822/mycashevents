@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Расчет суммы</string>
+    <string name="act_one">Список покупок</string>
+    <string name="val_edit">Редактирование суммы</string>
+    <string name="save">Сохранить</string>
+    <string name="close">Закрыть</string>
+    <string name="exit">Выйти</string>
+    <string name="to_me">Должны мне</string>
+    <string name="to_other">Должен я</string>
+    <string name="in_half">Пополам</string>
+    <string name="in_half_to_me">Мне должны половину</string>
+    <string name="in_half_im">Я должен половину</string>
+    <string name="val_discr">Введите сумму</string>
+    <string name="add">Добавить строку</string>
+    <string name="edit">Редактировать строку</string>
+    <string name="delete">Удалить строку</string>
+    <string name="calc">Расчитать</string>
+    <string name="ok">OK</string>
+    <string name="select">Выбрать</string>
+    <string name="result">Результат расчетов</string>
+    <string name="empty">Пусто</string>
+    <string name="delete_all">Удалить все</string>
+    <string name="save_last">Сохранить список</string>
+    <string name="load_last">Восстановить список</string>
+</resources>
