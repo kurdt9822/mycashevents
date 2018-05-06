@@ -3,13 +3,12 @@ package com.example.mycashcalc;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -20,22 +19,16 @@ import java.util.Map;
 
 public class Activity_list extends AppCompatActivity {
 
-    final String LOG_TAG = "myLogs";
-    Map<String, Object> m;
-//    final String ATTRIBUTE_NAME_ID = "event_id";
-//    final String ATTRIBUTE_NAME_DATE = "event_date";
-    ListView lvMain;
-//    ArrayList<String> data;
-    SimpleAdapter sAdapter;
-    ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-//    final String ATTRIBUTE_NAME_ID = "id";
-//    final String ATTRIBUTE_NAME_TEXT = "date";
+private Map<String, Object> m;
+private ListView lvMain;
+private SimpleAdapter sAdapter;
+    private final ArrayList<Map<String, Object>> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        lvMain = (ListView) findViewById(R.id.lvMain);
+        lvMain = findViewById(R.id.lvMain);
         // устанавливаем режим выбора пунктов списка
         lvMain.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -58,9 +51,9 @@ public class Activity_list extends AppCompatActivity {
             public void onClick(View v) {
                 if (lvMain.getCheckedItemPosition() != -1) {
                     Intent intent = new Intent();
-                    m = new HashMap<String, Object>();
+                    m = new HashMap<>();
                     m = data.get(lvMain.getCheckedItemPosition());
-                    Log.d(LOG_TAG, "putExtra id = " + m.get(Main.ATTRIBUTE_NAME_ID).toString());
+                    Log.d(Main.LOG_TAG, "putExtra id = " + m.get(Main.ATTRIBUTE_NAME_ID).toString());
                     intent.putExtra(Main.ATTRIBUTE_NAME_ID, m.get(Main.ATTRIBUTE_NAME_ID).toString());
                     setResult(RESULT_OK, intent);
                     finish();
@@ -106,30 +99,32 @@ public class Activity_list extends AppCompatActivity {
     }
 
     private boolean delete_all_events() {
-        boolean res = false;
-        DBhelper dbh = new DBhelper(this,"mycashcalc", null, 1);
-        SQLiteDatabase db = dbh.getWritableDatabase();
-        db.beginTransaction();
-        db.delete("purchases", null, null);
-        db.delete("events", null, null);
-        db.setTransactionSuccessful();
-        db.endTransaction();
-        dbh.close();
-        res = true;
-        return res;
+        try {
+            DBhelper dbh = new DBhelper(this,"mycashcalc", null, Main.DB_VERSION);
+            SQLiteDatabase db = dbh.getWritableDatabase();
+            db.beginTransaction();
+            db.delete("purchases", null, null);
+            db.delete("events", null, null);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            dbh.close();
+        } catch (Exception e) {
+            Log.e(Main.LOG_TAG, e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     private void getList() {
         //ArrayList<Map<String, Object>> res = new ArrayList<Map<String, Object>>();
-        DBhelper dbh = new DBhelper(this,"mycashcalc", null, 1);
+        DBhelper dbh = new DBhelper(this,"mycashcalc", null, Main.DB_VERSION);
         SQLiteDatabase db = dbh.getWritableDatabase();
-        Cursor c;
 //        String sqlQuery = "select event_id, event_date from events";
-        c = db.query("events", null, null, null, null, null, null);
+        Cursor c = db.query("events", null, null, null, null, null, null);
         if (c != null){
             if (c.moveToFirst()){
                 do {
-                    m = new HashMap<String, Object>();
+                    m = new HashMap<>();
 //                    m.clear();
                     m.put(Main.ATTRIBUTE_NAME_ID, c.getString(c.getColumnIndex(Main.ATTRIBUTE_NAME_ID)));
                     m.put(Main.ATTRIBUTE_NAME_DATE, c.getString(c.getColumnIndex(Main.ATTRIBUTE_NAME_DATE)));
@@ -137,8 +132,8 @@ public class Activity_list extends AppCompatActivity {
                     data.add(m);
                 } while (c.moveToNext());
             }
+            c.close();
         }
-        c.close();
         dbh.close();
 //        return res;
     }

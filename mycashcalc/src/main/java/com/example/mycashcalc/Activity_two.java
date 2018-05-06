@@ -1,20 +1,17 @@
 package com.example.mycashcalc;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 public class Activity_two extends AppCompatActivity {
 
-    EditText et;
-    String position;
+    private EditText et;
+    private String position;
 //    final String ATTRIBUTE_NAME_TEXT = "purchase_value";
 //    final String ATTRIBUTE_NAME_DIR = "purchase_dir";
 //    final String ATTRIBUTE_NAME_POS = "position";
@@ -28,9 +25,9 @@ public class Activity_two extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two);
 
-        et = (EditText) findViewById(R.id.etValue);
-        Button btnSave = findViewById(R.id.btnSave);
-        Button btnClose = findViewById(R.id.btnClose);
+        et = findViewById(R.id.etValue);
+//        Button btnSave = findViewById(R.id.btnSave);
+//        Button btnClose = findViewById(R.id.btnClose);
         RadioButton rbMe = findViewById(R.id.rbMe);
         RadioButton rbOther = findViewById(R.id.rbOther);
         RadioButton rbhalf_to_me = findViewById(R.id.rbHalf_to_me);

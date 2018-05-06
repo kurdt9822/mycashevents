@@ -1,9 +1,5 @@
 package com.example.mycashcalc;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -21,9 +17,15 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main extends AppCompatActivity {
 
-    final String LOG_TAG = "myLogs";
+    static final int DB_VERSION = 1;
+
+    static final String LOG_TAG = "myLogs";
     static String CURR_ID = null;
 
     private static final int CM_DELETE_ID = 1;
@@ -38,15 +40,14 @@ public class Main extends AppCompatActivity {
     static final String ATTRIBUTE_NAME_DATE = "event_date";
 
 
-    final int REQUEST_CODE_CREATE = 1;
-    final int REQUEST_CODE_EDIT = 2;
-    final int REQUEST_CODE_LIST = 3;
-    final int DIALOG_RESULT = 1;
+    private final int REQUEST_CODE_CREATE = 1;
+    private final int REQUEST_CODE_EDIT = 2;
+    private final int REQUEST_CODE_LIST = 3;
+//    final int DIALOG_RESULT = 1;
 
-    ListView lvSimple;
-    SimpleAdapter sAdapter;
-    ArrayList<Map<String, Object>> data_arr = new ArrayList<Map<String, Object>>();
-    Map<String, Object> m;
+    private SimpleAdapter sAdapter;
+    private final ArrayList<Map<String, Object>> data_arr = new ArrayList<>();
+    private Map<String, Object> m;
 
     /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState) {
@@ -70,14 +71,14 @@ public class Main extends AppCompatActivity {
         sAdapter = new SimpleAdapter(this, data_arr, R.layout.item, from, to);
 
         // определяем список и присваиваем ему адаптер
-        lvSimple = (ListView) findViewById(R.id.lvSimple);
+        ListView lvSimple = findViewById(R.id.lvSimple);
         lvSimple.setAdapter(sAdapter);
         registerForContextMenu(lvSimple);
     }
 
     private void add_string(String value, String dir) {
         // создаем новый Map
-        m = new HashMap<String, Object>();
+        m = new HashMap<>();
         m.put(ATTRIBUTE_NAME_TEXT, value);
         m.put(ATTRIBUTE_NAME_DIR, dir);
         // добавляем его в коллекцию
@@ -106,7 +107,7 @@ public class Main extends AppCompatActivity {
             case CM_EDIT_ID:
                 // получаем инфу о пункте списка
                 acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-                m = new HashMap<String, Object>();
+                m = new HashMap<>();
                 m = data_arr.get(acmi.position);
                 Intent intent = new Intent(this, Activity_two.class);
                 intent.putExtra(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
@@ -158,7 +159,7 @@ public class Main extends AppCompatActivity {
     }
 
     private void edit_item(String position, String value, String dir) {
-        m = new HashMap<String, Object>();
+        m = new HashMap<>();
         m.put(ATTRIBUTE_NAME_TEXT, value);
         m.put(ATTRIBUTE_NAME_DIR, dir);
         data_arr.set(Integer.parseInt(position), m);
@@ -170,8 +171,8 @@ public class Main extends AppCompatActivity {
     }
 
     public void onCalcClick(View view) {
-        m = new HashMap<String, Object>();
-        float f = 0;
+        m = new HashMap<>();
+        float f;
         float f_prev = 0;
         for (int i = 0; i < data_arr.size(); i++) {
             m = data_arr.get(i);
@@ -197,6 +198,7 @@ public class Main extends AppCompatActivity {
         args.putFloat("result", f_prev);
         dlg1.setArguments(args);
         dlg1.show(getFragmentManager(), "dlg1");
+        saveList();
 //        Toast.makeText(this, Float.toString(f), Toast.LENGTH_SHORT).show();
     }
 
@@ -263,32 +265,34 @@ public class Main extends AppCompatActivity {
 
     private Integer checkList(String id){
         int i = -1;
-        DBhelper dbh = new DBhelper(this,"mycashcalc", null, 1);
-        SQLiteDatabase db = dbh.getWritableDatabase();
-        Cursor c;
-        String sqlQuery = "select count(*) as cnt from events where event_id = ?";
-        c = db.rawQuery(sqlQuery, new String[] {CURR_ID});
-        if (c != null){
-            if (c.moveToFirst()){
-                i = c.getInt(c.getColumnIndex("cnt"));
-            }
+        if (id != null) {
+                DBhelper dbh = new DBhelper(this, "mycashcalc", null, DB_VERSION);
+                SQLiteDatabase db = dbh.getWritableDatabase();
+                String selection = "event_id = ?";
+                String[] selectionArgs = new String[]{CURR_ID};
+                Cursor c = db.query("events", null, selection, selectionArgs, null, null, null, null);
+                if (c != null) {
+                    i = c.getCount();
+                    c.close();
+                }
+                dbh.close();
         }
-        c.close();
-        dbh.close();
         return i;
     }
 
     private void updateList() {
         if (CURR_ID != null){
 //        if (Integer.parseInt(CURR_ID) > 0){
-            m = new HashMap<String, Object>();
+            m = new HashMap<>();
             ContentValues cv = new ContentValues();
-            DBhelper dbh = new DBhelper(this,"mycashcalc", null, 1);
+            DBhelper dbh = new DBhelper(this,"mycashcalc", null, DB_VERSION);
             SQLiteDatabase db = dbh.getWritableDatabase();
             db.beginTransaction();
             cv.put("event_name", "sometext");
-            db.update("events", cv, "event_id = ?", new String[] {CURR_ID.toString()});
-
+            String where = "event_id = ?";
+            String[] whereArgs = new String[] {CURR_ID};
+            db.update("events", cv, where, whereArgs);
+            db.delete("purchases", where, whereArgs);
             for (int i = 0; i < data_arr.size(); i++) {
                 m = data_arr.get(i);
                 cv.clear();
@@ -307,9 +311,9 @@ public class Main extends AppCompatActivity {
 
     private void insertList() {
 //        Long ll;
-        m = new HashMap<String, Object>();
+        m = new HashMap<>();
         ContentValues cv = new ContentValues();
-        DBhelper dbh = new DBhelper(this,"mycashcalc", null, 1);
+        DBhelper dbh = new DBhelper(this,"mycashcalc", null, DB_VERSION);
         SQLiteDatabase db = dbh.getWritableDatabase();
         db.beginTransaction();
 //        cv.put("event_id", "");
@@ -327,29 +331,27 @@ public class Main extends AppCompatActivity {
             }
             db.setTransactionSuccessful();
 //            currID = ll;
+            CURR_ID = String.valueOf(id);
         }
         db.endTransaction();
-        CURR_ID = String.valueOf(id);
         dbh.close();
     }
 
     private boolean loadList(String id) {
 //        boolean res = false;
         try {
-            DBhelper dbh = new DBhelper(this,"mycashcalc", null, 1);
+            DBhelper dbh = new DBhelper(this,"mycashcalc", null, DB_VERSION);
             SQLiteDatabase db = dbh.getWritableDatabase();
             Cursor c;
 //            String sqlQuery = "select purchase_value, purchase_dir from purchases where event_id = ?";
             Log.d(LOG_TAG, "return id = " + id);
-            String selection = null;
-            String[] selectionArgs = null;
-            selection = "event_id = ?";
-            selectionArgs = new String[] { id };
+            String selection = "event_id = ?";
+            String[] selectionArgs = new String[] { id };
             c = db.query("purchases", null, selection, selectionArgs, null, null, null);
             if (c != null){
                 if (c.moveToFirst()){
                     do {
-                        m = new HashMap<String, Object>();
+                        m = new HashMap<>();
                         m.put(ATTRIBUTE_NAME_TEXT, c.getString(c.getColumnIndex(ATTRIBUTE_NAME_TEXT)));
                         m.put(ATTRIBUTE_NAME_DIR, c.getString(c.getColumnIndex(ATTRIBUTE_NAME_DIR)));
                         data_arr.add(m);
@@ -357,8 +359,8 @@ public class Main extends AppCompatActivity {
                     } while (c.moveToNext());
 //                sAdapter.notifyDataSetChanged();
                 }
+                c.close();
             }
-            c.close();
             dbh.close();
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage());

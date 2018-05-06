@@ -6,9 +6,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.View;
 
 public class Dialog1 extends DialogFragment implements OnClickListener {
 
@@ -23,10 +20,9 @@ public class Dialog1 extends DialogFragment implements OnClickListener {
     }
 
     public void onClick(DialogInterface dialog, int which) {
-        int i = 0;
+//        int i = 0;
         switch (which) {
             case Dialog.BUTTON_POSITIVE:
-                i = R.string.ok;
                 break;
         }
     }
