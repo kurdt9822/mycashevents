@@ -20,6 +20,7 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public class Main extends AppCompatActivity {
 
@@ -172,10 +173,22 @@ public class Main extends AppCompatActivity {
 
     public void onCalcClick(View view) {
         m = new HashMap<>();
+        String tmp_str = null;
         float f;
         float f_prev = 0;
         for (int i = 0; i < data_arr.size(); i++) {
             m = data_arr.get(i);
+
+            tmp_str = m.get(ATTRIBUTE_NAME_TEXT).toString();
+            tmp_str = tmp_str.replaceAll("[^A-Za-zА-Яа-я0-9]", "");
+            StringTokenizer st = new StringTokenizer(tmp_str, "*/+-");
+            while(st.hasMoreTokens()) {
+                String key = st.nextToken();
+                String val = st.nextToken();
+                //System.out.println(key + " : " + val);
+            }
+
+
             f = Float.parseFloat(m.get(ATTRIBUTE_NAME_TEXT).toString());
             if (getResources().getString(R.string.to_me).equals(m.get(ATTRIBUTE_NAME_DIR).toString())) {
                 f = f * 1;
@@ -191,8 +204,6 @@ public class Main extends AppCompatActivity {
             }
              f_prev = f_prev + f;
         }
-//        TextView tv = findViewById(R.id.tvResult);
-//        tv.setText(Float.toString(f_prev));
         DialogFragment dlg1 = new Dialog1();
         Bundle args = new Bundle(1);
         args.putFloat("result", f_prev);

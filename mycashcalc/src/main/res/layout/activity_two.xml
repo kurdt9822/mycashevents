@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/val_discr"
-        android:inputType="numberSigned|numberDecimal" />
+        android:inputType="phone" />
 
     <RadioGroup
         android:layout_width="match_parent"
