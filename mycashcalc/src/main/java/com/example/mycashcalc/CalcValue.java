@@ -28,14 +28,25 @@ final class CalcValue {
     }
 
     private static int getPriority(String token) {
-        if (token.equals("+") || token.equals("-")) {
-            return 1;
-        }
-        return 2;
+        int i = -1;
+        switch (token) {
+            case "+": i = 1; break;
+            case "-": i = 1; break;
+            case "*": i = 2; break;
+            case "/": i = 2; break;
+            case "(": i = 0; break;
+            case ")": i = 0; break;
+        };
+//        if (token.equals("+") || token.equals("-")) {
+//            return 1;
+//        }
+//        return 2;
+        return i;
     }
 
     private static Stack<String> getPolishForm (String input) {
         Stack<String> res = new Stack<>();
+//        Stack<String> res = new Stack<>();
         Stack<String> operators = new Stack<>();
         StringTokenizer st = new StringTokenizer(input, OPERATORS, true);
         while(st.hasMoreTokens()) {
@@ -45,7 +56,7 @@ final class CalcValue {
             }
             else {
                 if (isOperator(token)) {
-                    while (getPriority(operators.lastElement()) >= getPriority(token) && !operators.isEmpty() && isOperator(operators.lastElement())) {
+                    while (!operators.isEmpty() && isOperator(operators.lastElement()) && getPriority(operators.lastElement()) >= getPriority(token)) {
                         res.push(operators.pop());
                     }
                     operators.push(token);
@@ -81,23 +92,22 @@ final class CalcValue {
     public static Float calcPolishForm (String input) {
         Stack<String> pForm = getPolishForm(input);
         Stack<String> res = new Stack<>();
-//        String op2;
-//        String op1;
-        Float tmp;
+        Float tmp = null;
         if (!pForm.isEmpty())
         {
-            while (!pForm.isEmpty()){
+            while (!pForm.isEmpty()) {
                 String token = pForm.pop();
                 if (isOperator(token)){
-//                    op2 = res.pop();
-//                    op1 = res.pop();
-                    tmp = execOperation(res.pop(), res.pop(), token);
+                    String op2 = res.pop();
+                    String op1 = res.pop();
+                    tmp = execOperation(op1, op2, token);
                     res.push(tmp.toString());
                 } else {
-                    res.push(pForm.pop());
+                    res.push(token);
                 }
             }
         }
-        return null;
+        return Float.parseFloat(res.lastElement());
     }
+
 }

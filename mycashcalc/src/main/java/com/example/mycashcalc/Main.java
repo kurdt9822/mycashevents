@@ -151,7 +151,7 @@ public class Main extends AppCompatActivity {
                 case REQUEST_CODE_LIST:
                     Log.d(LOG_TAG, "REQUEST_CODE_LIST");
                     if (deleteAllItems()) {
-                        if (loadList(data.getStringExtra("event_id"))) sAdapter.notifyDataSetChanged();
+                        if (loadList(data.getStringExtra(ATTRIBUTE_NAME_ID))) sAdapter.notifyDataSetChanged();
                     }
                     break;
             }
@@ -299,9 +299,9 @@ public class Main extends AppCompatActivity {
             for (int i = 0; i < data_arr.size(); i++) {
                 m = data_arr.get(i);
                 cv.clear();
-                cv.put("event_id", CURR_ID);
-                cv.put("purchase_value", Float.parseFloat(m.get(ATTRIBUTE_NAME_TEXT).toString()));
-                cv.put("purchase_dir", m.get(ATTRIBUTE_NAME_DIR).toString());
+                cv.put(ATTRIBUTE_NAME_ID, CURR_ID);
+                cv.put(ATTRIBUTE_NAME_TEXT, Float.parseFloat(m.get(ATTRIBUTE_NAME_TEXT).toString()));
+                cv.put(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
                 db.insert("purchases", null, cv);
             }
             db.setTransactionSuccessful();
@@ -327,9 +327,9 @@ public class Main extends AppCompatActivity {
 //                m = new HashMap<String, Object>();
                 m = data_arr.get(i);
                 cv.clear();
-                cv.put("event_id", CURR_ID);
-                cv.put("purchase_value", Float.parseFloat(m.get(ATTRIBUTE_NAME_TEXT).toString()));
-                cv.put("purchase_dir", m.get(ATTRIBUTE_NAME_DIR).toString());
+                cv.put(ATTRIBUTE_NAME_ID, CURR_ID);
+                cv.put(ATTRIBUTE_NAME_TEXT, m.get(ATTRIBUTE_NAME_TEXT).toString());
+                cv.put(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
                 db.insert("purchases", null, cv);
             }
             db.setTransactionSuccessful();

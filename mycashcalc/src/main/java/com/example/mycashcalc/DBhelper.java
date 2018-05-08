@@ -23,7 +23,7 @@ class DBhelper extends SQLiteOpenHelper {
 //                + "FOREIGN KEY (event_id) REFERENCES events (event_id)"
 //                + "ON DELETE CASCADE ON UPDATE NO ACTION"
                 + "event_id integer,"
-                + "purchase_value float,"
+                + "purchase_value text,"
                 + "purchase_dir text" + ");");
     }
 
