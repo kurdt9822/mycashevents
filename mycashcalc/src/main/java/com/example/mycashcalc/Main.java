@@ -20,6 +20,7 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main extends AppCompatActivity {
@@ -172,26 +173,17 @@ public class Main extends AppCompatActivity {
     }
 
     public void onCalcClick(View view) {
+
         m = new HashMap<>();
-        String tmp_str = null;
         float f;
         float f_prev = 0;
         for (int i = 0; i < data_arr.size(); i++) {
             m = data_arr.get(i);
+            f = CalcValue.calcPolishForm(m.get(ATTRIBUTE_NAME_TEXT).toString());
 
-            tmp_str = m.get(ATTRIBUTE_NAME_TEXT).toString();
-            tmp_str = tmp_str.replaceAll("[^A-Za-zА-Яа-я0-9]", "");
-            StringTokenizer st = new StringTokenizer(tmp_str, "*/+-");
-            while(st.hasMoreTokens()) {
-                String key = st.nextToken();
-                String val = st.nextToken();
-                //System.out.println(key + " : " + val);
-            }
-
-
-            f = Float.parseFloat(m.get(ATTRIBUTE_NAME_TEXT).toString());
+//            f = Float.parseFloat(m.get(ATTRIBUTE_NAME_TEXT).toString());
             if (getResources().getString(R.string.to_me).equals(m.get(ATTRIBUTE_NAME_DIR).toString())) {
-                f = f * 1;
+//                f = f * 1;
             } else
                 if (getResources().getString(R.string.to_other).equals(m.get(ATTRIBUTE_NAME_DIR).toString())) {
                 f = f *  (-1);
