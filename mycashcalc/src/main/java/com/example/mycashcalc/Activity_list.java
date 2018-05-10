@@ -3,12 +3,14 @@ package com.example.mycashcalc;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -45,29 +47,39 @@ private SimpleAdapter sAdapter;
 //                android.R.layout.simple_list_item_1, data);
         lvMain.setAdapter(sAdapter);
         registerForContextMenu(lvMain);
-        Button btnOk = findViewById(R.id.btnOk);
-        btnOk.setOnClickListener(new View.OnClickListener() {
+//        Button btnOk = findViewById(R.id.btnOk);
+//        btnOk.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                clickItem(lvMain.getCheckedItemPosition());
+//            }
+//        });
+//        Button btnCancel = findViewById(R.id.btnCancel);
+//        btnCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
+        lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                if (lvMain.getCheckedItemPosition() != -1) {
-                    Intent intent = new Intent();
-                    m = new HashMap<>();
-                    m = data.get(lvMain.getCheckedItemPosition());
-                    Log.d(Main.LOG_TAG, "putExtra id = " + m.get(Main.ATTRIBUTE_NAME_ID).toString());
-                    intent.putExtra(Main.ATTRIBUTE_NAME_ID, m.get(Main.ATTRIBUTE_NAME_ID).toString());
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                clickItem(i);
+//                view.setBackgroundColor(Color.RED);
             }
         });
-        Button btnCancel = findViewById(R.id.btnCancel);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    }
 
+    private void clickItem(int pos){
+        if (pos != -1) {
+            Intent intent = new Intent();
+            m = new HashMap<>();
+            m = data.get(pos);
+//            Log.d(Main.LOG_TAG, "putExtra id = " + m.get(Main.ATTRIBUTE_NAME_ID).toString());
+            intent.putExtra(Main.ATTRIBUTE_NAME_ID, m.get(Main.ATTRIBUTE_NAME_ID).toString());
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     @Override

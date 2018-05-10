@@ -97,7 +97,8 @@ final class CalcValue {
     }
 
     public static Float calcPolishForm (String input) {
-        String clearString = input.replaceAll("[^0-9\\*\\+\\-\\/]", "");
+        String clearString = input.replaceAll("[^0-9\\*\\+\\-\\/\\.\\,]", "");
+        clearString = clearString.replaceAll(",", ".");
         Stack<String> pForm = getPolishForm(clearString);
         Stack<String> res = new Stack<>();
         if (!pForm.isEmpty())
