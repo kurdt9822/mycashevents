@@ -20,8 +20,6 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
-import java.util.StringTokenizer;
 
 public class Main extends AppCompatActivity {
 
@@ -164,7 +162,13 @@ public class Main extends AppCompatActivity {
         m = new HashMap<>();
         m.put(ATTRIBUTE_NAME_TEXT, value);
         m.put(ATTRIBUTE_NAME_DIR, dir);
-        data_arr.set(Integer.parseInt(position), m);
+        try {
+            data_arr.set(Integer.parseInt(position), m);
+        }
+        catch (NumberFormatException e) {
+            Log.e(LOG_TAG, e.getMessage());
+            return;
+        }
         sAdapter.notifyDataSetChanged();
     }
 
@@ -296,13 +300,12 @@ public class Main extends AppCompatActivity {
             String[] whereArgs = new String[] {CURR_ID};
             db.update("events", cv, where, whereArgs);
             db.delete("purchases", where, whereArgs);
-            for (int i = 0; i < data_arr.size(); i++) {
-                m = data_arr.get(i);
-                cv.clear();
-                cv.put(ATTRIBUTE_NAME_ID, CURR_ID);
-                cv.put(ATTRIBUTE_NAME_TEXT, Float.parseFloat(m.get(ATTRIBUTE_NAME_TEXT).toString()));
-                cv.put(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
-                db.insert("purchases", null, cv);
+            try {
+                insertListView(db, "purchases", data_arr, Long.parseLong(CURR_ID));
+            } catch (NumberFormatException e) {
+                Log.e(LOG_TAG, e.getMessage());
+                dbh.close();
+                return;
             }
             db.setTransactionSuccessful();
 //            currID = ll;
@@ -323,21 +326,26 @@ public class Main extends AppCompatActivity {
         cv.put("event_name", "sometext");
         Long id = db.insert("events", null, cv);
         if (id != -1){
-            for (int i = 0; i < data_arr.size(); i++) {
-//                m = new HashMap<String, Object>();
-                m = data_arr.get(i);
-                cv.clear();
-                cv.put(ATTRIBUTE_NAME_ID, CURR_ID);
-                cv.put(ATTRIBUTE_NAME_TEXT, m.get(ATTRIBUTE_NAME_TEXT).toString());
-                cv.put(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
-                db.insert("purchases", null, cv);
-            }
+            insertListView(db, "purchases", data_arr, id);
             db.setTransactionSuccessful();
 //            currID = ll;
             CURR_ID = String.valueOf(id);
         }
         db.endTransaction();
         dbh.close();
+    }
+
+    private void insertListView(SQLiteDatabase db, String tabName, ArrayList<Map<String, Object>> arr, Long id){
+        ContentValues cv = new ContentValues();
+        for (int i = 0; i < arr.size(); i++) {
+//                m = new HashMap<String, Object>();
+            m = arr.get(i);
+            cv.clear();
+            cv.put(ATTRIBUTE_NAME_ID, id);
+            cv.put(ATTRIBUTE_NAME_TEXT, m.get(ATTRIBUTE_NAME_TEXT).toString());
+            cv.put(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
+            db.insert(tabName, null, cv);
+        }
     }
 
     private boolean loadList(String id) {
