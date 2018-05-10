@@ -144,7 +144,7 @@ public class Main extends AppCompatActivity {
                     add_string(data.getStringExtra(ATTRIBUTE_NAME_TEXT), data.getStringExtra(ATTRIBUTE_NAME_DIR));
                     break;
                 case REQUEST_CODE_EDIT:
-                    edit_item(data.getStringExtra(ATTRIBUTE_NAME_POS), data.getStringExtra(ATTRIBUTE_NAME_TEXT), data.getStringExtra(ATTRIBUTE_NAME_DIR));
+                    edit_item(data.getIntExtra(ATTRIBUTE_NAME_POS, -1), data.getStringExtra(ATTRIBUTE_NAME_TEXT), data.getStringExtra(ATTRIBUTE_NAME_DIR));
                     break;
                 case REQUEST_CODE_LIST:
                     Log.d(LOG_TAG, "REQUEST_CODE_LIST");
@@ -158,17 +158,17 @@ public class Main extends AppCompatActivity {
 //            Toast.makeText(this, "Wrong result", Toast.LENGTH_SHORT).show();
     }
 
-    private void edit_item(String position, String value, String dir) {
+    private void edit_item(int position, String value, String dir) {
         m = new HashMap<>();
         m.put(ATTRIBUTE_NAME_TEXT, value);
         m.put(ATTRIBUTE_NAME_DIR, dir);
-        try {
-            data_arr.set(Integer.parseInt(position), m);
-        }
-        catch (NumberFormatException e) {
-            Log.e(LOG_TAG, e.getMessage());
-            return;
-        }
+//        try {
+            data_arr.set(position, m);
+//        }
+//        catch (NumberFormatException e) {
+//            Log.e(LOG_TAG, e.getMessage());
+//            return;
+//        }
         sAdapter.notifyDataSetChanged();
     }
 

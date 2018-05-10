@@ -10,7 +10,7 @@ import android.widget.RadioButton;
 public class Activity_two extends AppCompatActivity {
 
     private EditText et;
-    private String position;
+    private int position;
 //    final String ATTRIBUTE_NAME_TEXT = "purchase_value";
 //    final String ATTRIBUTE_NAME_DIR = "purchase_dir";
 //    final String ATTRIBUTE_NAME_POS = "position";
@@ -35,7 +35,7 @@ public class Activity_two extends AppCompatActivity {
         Intent intent = getIntent();
         String dir = intent.getStringExtra(Main.ATTRIBUTE_NAME_DIR);
         String value = intent.getStringExtra(Main.ATTRIBUTE_NAME_TEXT);
-        position = intent.getStringExtra(Main.ATTRIBUTE_NAME_POS);
+        position = intent.getIntExtra(Main.ATTRIBUTE_NAME_POS, -1);
         if (getResources().getString(R.string.to_me).equals(dir)) {
             rbMe.setChecked(true);
         } else

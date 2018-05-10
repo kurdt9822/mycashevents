@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
+import java.util.Locale;
+
 public class Dialog1 extends DialogFragment implements OnClickListener {
 
 //    String result = getResources().getString(R.string.empty);
@@ -15,7 +17,7 @@ public class Dialog1 extends DialogFragment implements OnClickListener {
         Float ff = getArguments().getFloat("result");
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
                 .setTitle(getResources().getString(R.string.result)).setPositiveButton(R.string.ok, this)
-                .setMessage(String.format("%(.2f", ff));
+                .setMessage(String.format(new Locale("RU"), "%(.2f", ff));
         return adb.create();
     }
 
