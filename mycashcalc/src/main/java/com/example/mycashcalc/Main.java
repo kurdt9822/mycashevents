@@ -17,6 +17,10 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +30,7 @@ public class Main extends AppCompatActivity {
     static final int DB_VERSION = 1;
 
     static final String LOG_TAG = "myLogs";
+    static final String FILENAME = "myFile";
     static String CURR_ID = null;
 
     private static final int CM_DELETE_ID = 1;
@@ -290,7 +295,7 @@ public class Main extends AppCompatActivity {
     private void updateList() {
         if (CURR_ID != null){
 //        if (Integer.parseInt(CURR_ID) > 0){
-            m = new HashMap<>();
+//            m = new HashMap<>();
             ContentValues cv = new ContentValues();
             DBhelper dbh = new DBhelper(this,"mycashcalc", null, DB_VERSION);
             SQLiteDatabase db = dbh.getWritableDatabase();
@@ -316,19 +321,30 @@ public class Main extends AppCompatActivity {
     }
 
     private void insertList() {
-//        Long ll;
-        m = new HashMap<>();
+
+//        try {
+//            // отрываем поток для записи
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(openFileOutput(FILENAME, MODE_PRIVATE)));
+//            // пишем данные
+//            bw.write("Содержимое файла");
+//            // закрываем поток
+//            bw.close();
+//            Log.d(LOG_TAG, "Файл записан");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         ContentValues cv = new ContentValues();
         DBhelper dbh = new DBhelper(this,"mycashcalc", null, DB_VERSION);
         SQLiteDatabase db = dbh.getWritableDatabase();
         db.beginTransaction();
-//        cv.put("event_id", "");
         cv.put("event_name", "sometext");
         Long id = db.insert("events", null, cv);
         if (id != -1){
             insertListView(db, "purchases", data_arr, id);
             db.setTransactionSuccessful();
-//            currID = ll;
             CURR_ID = String.valueOf(id);
         }
         db.endTransaction();
@@ -338,7 +354,7 @@ public class Main extends AppCompatActivity {
     private void insertListView(SQLiteDatabase db, String tabName, ArrayList<Map<String, Object>> arr, Long id){
         ContentValues cv = new ContentValues();
         for (int i = 0; i < arr.size(); i++) {
-//                m = new HashMap<String, Object>();
+            m = new HashMap<>();
             m = arr.get(i);
             cv.clear();
             cv.put(ATTRIBUTE_NAME_ID, id);
