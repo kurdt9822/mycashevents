@@ -22,15 +22,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Calendar;
 
 public class Main extends AppCompatActivity {
 
     static final int DB_VERSION = 1;
 
     static final String LOG_TAG = "myLogs";
-    static final String FILENAME = "myFile";
+//    static final String FILENAME = "myFile";
     static String CURR_ID = null;
 
     private static final int CM_DELETE_ID = 1;
@@ -44,10 +46,14 @@ public class Main extends AppCompatActivity {
     static final String ATTRIBUTE_NAME_ID = "event_id";
     static final String ATTRIBUTE_NAME_DATE = "event_date";
 
+//    static final String ATTRIBUTE_ME = "me_flag";
 
     private final int REQUEST_CODE_CREATE = 1;
     private final int REQUEST_CODE_EDIT = 2;
     private final int REQUEST_CODE_LIST = 3;
+
+    private final String FILENAME = "mycashcalc";
+//    private final int F_ME = 0;
 //    final int DIALOG_RESULT = 1;
 
     private SimpleAdapter sAdapter;
@@ -114,10 +120,13 @@ public class Main extends AppCompatActivity {
                 acmi = (AdapterContextMenuInfo) item.getMenuInfo();
                 m = new HashMap<>();
                 m = data_arr.get(acmi.position);
+
                 Intent intent = new Intent(this, Activity_two.class);
                 intent.putExtra(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
                 intent.putExtra(ATTRIBUTE_NAME_TEXT, m.get(ATTRIBUTE_NAME_TEXT).toString());
                 intent.putExtra(ATTRIBUTE_NAME_POS, acmi.position);
+//                intent.putExtra(ATTRIBUTE_ME, checkToMeFlag());
+
                 startActivityForResult(intent, REQUEST_CODE_EDIT);
                 // уведомляем, что данные изменились
                 break;
@@ -134,8 +143,19 @@ public class Main extends AppCompatActivity {
         return super.onContextItemSelected(item);
     }
 
+//    private boolean checkToMeFlag() {
+//        Map<String, Object> tmp = new HashMap<>();
+//        Map<String, Object> tmp2 = new HashMap<>();
+//        tmp.put(ATTRIBUTE_NAME_DIR, getResources().getString(R.string.to_me));
+//        tmp2.put(ATTRIBUTE_NAME_DIR, getResources().getString(R.string.in_half_to_me));
+//        if (data_arr.contains(tmp) || data_arr.contains(tmp2))
+//            return true;
+//        else return false;
+//    }
+
     private void create_item() {
         Intent intent = new Intent(this, Activity_two.class);
+//        intent.putExtra(ATTRIBUTE_ME, checkToMeFlag());
         startActivityForResult(intent, REQUEST_CODE_CREATE);
     }
 
@@ -324,9 +344,22 @@ public class Main extends AppCompatActivity {
 
 //        try {
 //            // отрываем поток для записи
-//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(openFileOutput(FILENAME, MODE_PRIVATE)));
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(openFileOutput(FILENAME, MODE_APPEND)));
 //            // пишем данные
-//            bw.write("Содержимое файла");
+//            Date currTime = Calendar.getInstance().getTime();
+//
+////            ContentValues cv = new ContentValues();
+//            for (int i = 0; i < data_arr.size(); i++) {
+//                m = new HashMap<>();
+//                m = data_arr.get(i);
+//                bw.write(currTime.toString()+";"+m.get(ATTRIBUTE_NAME_DIR).toString()+";"+m.get(ATTRIBUTE_NAME_TEXT).toString()+"#");
+////                cv.clear();
+////                cv.put(ATTRIBUTE_NAME_ID, id);
+////                cv.put(ATTRIBUTE_NAME_TEXT, m.get(ATTRIBUTE_NAME_TEXT).toString());
+////                cv.put(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
+////                db.insert(tabName, null, cv);
+//            }
+//
 //            // закрываем поток
 //            bw.close();
 //            Log.d(LOG_TAG, "Файл записан");
@@ -349,6 +382,9 @@ public class Main extends AppCompatActivity {
         }
         db.endTransaction();
         dbh.close();
+    }
+
+    private void saveToGoogleDrive() {
     }
 
     private void insertListView(SQLiteDatabase db, String tabName, ArrayList<Map<String, Object>> arr, Long id){

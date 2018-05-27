@@ -3,11 +3,16 @@ package com.example.mycashcalc;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 class DBhelper extends SQLiteOpenHelper {
 
+    public String databasePath = "";
+
     public DBhelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
+        databasePath = context.getDatabasePath(name).getAbsolutePath();
+        Log.d(Main.LOG_TAG, databasePath);
     }
 
     @Override
@@ -31,4 +36,5 @@ class DBhelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
 }

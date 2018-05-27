@@ -36,6 +36,13 @@ public class Activity_two extends AppCompatActivity {
         String dir = intent.getStringExtra(Main.ATTRIBUTE_NAME_DIR);
         String value = intent.getStringExtra(Main.ATTRIBUTE_NAME_TEXT);
         position = intent.getIntExtra(Main.ATTRIBUTE_NAME_POS, -1);
+
+//        if (intent.getBooleanExtra(Main.ATTRIBUTE_ME, false)){
+//            rbhalf_im.setVisibility(View.INVISIBLE);
+//            rbOther.setVisibility(View.INVISIBLE);
+//        }
+
+
         if (getResources().getString(R.string.to_me).equals(dir)) {
             rbMe.setChecked(true);
         } else

@@ -5,8 +5,8 @@
     <string name="save">Сохранить</string>
     <string name="close">Закрыть</string>
     <string name="exit">Выйти</string>
-    <string name="to_me">Должны мне</string>
-    <string name="to_other">Должен я</string>
+    <string name="to_me">Мне должны</string>
+    <string name="to_other">Я должен</string>
     <!--<string name="in_half">Пополам</string>-->
     <string name="in_half_to_me">Мне должны половину</string>
     <string name="in_half_im">Я должен половину</string>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="bottom"
     android:orientation="vertical">
 
     <EditText
@@ -9,20 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:gravity="bottom"
         android:hint="@string/val_discr"
         android:inputType="phone" />
 
     <RadioGroup
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <RadioButton
-            android:id="@+id/rbMe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="false"
-            android:text="@string/to_me" />
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
 
         <RadioButton
             android:id="@+id/rbOther"
@@ -33,14 +28,6 @@
             android:text="@string/to_other" />
 
         <RadioButton
-            android:id="@+id/rbHalf_to_me"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            android:text="@string/in_half_to_me" />
-
-        <RadioButton
             android:id="@+id/rbHalf_im"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,11 +35,28 @@
             android:checked="false"
             android:text="@string/in_half_im" />
 
+        <RadioButton
+            android:id="@+id/rbMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="@string/to_me" />
+
+        <RadioButton
+            android:id="@+id/rbHalf_to_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/in_half_to_me" />
+
     </RadioGroup>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:orientation="horizontal">
 
         <Button
@@ -77,5 +81,5 @@
     <ScrollView
         android:id="@+id/ScrollView01"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="wrap_content" />
 </LinearLayout>
