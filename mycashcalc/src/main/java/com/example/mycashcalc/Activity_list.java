@@ -3,7 +3,6 @@ package com.example.mycashcalc;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -30,7 +28,7 @@ private SimpleAdapter sAdapter;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        lvMain = findViewById(R.id.lvMain);
+        lvMain = (ListView) findViewById(R.id.lvMain);
         // устанавливаем режим выбора пунктов списка
         lvMain.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -112,11 +110,11 @@ private SimpleAdapter sAdapter;
 
     private boolean delete_all_events() {
         try {
-            DBhelper dbh = new DBhelper(this,"mycashcalc", null, Main.DB_VERSION);
+            DBhelper dbh = new DBhelper(this, Main.DB_NAME, null, Main.DB_VERSION);
             SQLiteDatabase db = dbh.getWritableDatabase();
             db.beginTransaction();
-            db.delete("purchases", null, null);
-            db.delete("events", null, null);
+            db.delete(Main.PURCHASES_TABLE, null, null);
+            db.delete(Main.EVENTS_TABLE, null, null);
             db.setTransactionSuccessful();
             db.endTransaction();
             dbh.close();
@@ -128,11 +126,9 @@ private SimpleAdapter sAdapter;
     }
 
     private void getList() {
-        //ArrayList<Map<String, Object>> res = new ArrayList<Map<String, Object>>();
-        DBhelper dbh = new DBhelper(this,"mycashcalc", null, Main.DB_VERSION);
+        DBhelper dbh = new DBhelper(this, Main.DB_NAME, null, Main.DB_VERSION);
         SQLiteDatabase db = dbh.getWritableDatabase();
-//        String sqlQuery = "select event_id, event_date from events";
-        Cursor c = db.query("events", null, null, null, null, null, null);
+        Cursor c = db.query(Main.EVENTS_TABLE, null, null, null, null, null, null);
         if (c != null){
             if (c.moveToFirst()){
                 do {

@@ -1,41 +1,28 @@
 package com.example.mycashcalc;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import java.util.Locale;
+public class Dialog1 extends DialogFragment  {
 
-public class Dialog1 extends DialogFragment implements OnClickListener {
-
-//    String result = getResources().getString(R.string.empty);
-
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Float ff = getArguments().getFloat("result");
-        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-                .setTitle(getResources().getString(R.string.result)).setPositiveButton(R.string.ok, this)
-                .setMessage(String.format(new Locale("RU"), "%(.2f", ff));
-        return adb.create();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog, null);//super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public void onClick(DialogInterface dialog, int which) {
-//        int i = 0;
-        switch (which) {
-            case Dialog.BUTTON_POSITIVE:
-                break;
-        }
-    }
-
+    @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-
     }
 
+    @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-
     }
 }

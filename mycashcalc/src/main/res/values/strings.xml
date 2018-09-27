@@ -1,16 +1,18 @@
 <resources>
-    <string name="app_name">Расчет суммы</string>
+    <string name="app_name">Расчет суммы чеков</string>
     <string name="act_one">Список покупок</string>
+    <string name="sw_menu_flag">За продукты платил я</string>
     <string name="val_edit">Редактирование суммы</string>
     <string name="save">Сохранить</string>
     <string name="close">Закрыть</string>
     <string name="exit">Выйти</string>
-    <string name="to_me">Мне должны</string>
-    <string name="to_other">Я должен</string>
+    <string name="to_me">Должны мне</string>
+    <string name="to_other">Должен я</string>
     <!--<string name="in_half">Пополам</string>-->
     <string name="in_half_to_me">Мне должны половину</string>
     <string name="in_half_im">Я должен половину</string>
     <string name="val_discr">Введите сумму</string>
+    <string name="val_name">Введите наименование (не обязательно)</string>
     <string name="add">Добавить строку</string>
     <string name="edit">Редактировать строку</string>
     <string name="delete">Удалить строку</string>
@@ -22,4 +24,7 @@
     <string name="delete_all">Удалить все</string>
     <string name="save_last">Сохранить список</string>
     <string name="load_last">Восстановить список</string>
+    <string name="upload_to_ftp">Сохранить базу на сервер</string>
+    <string name="load_from_ftp">Загрузить базу с сервера</string>
+    <string name="dialog_question">Загрузить базу с сервера? Текущая база безвозвратно затрется</string>
 </resources>

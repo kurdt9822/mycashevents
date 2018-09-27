@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Switch;
 
 public class Activity_two extends AppCompatActivity {
 
-    private EditText et;
+    private EditText et_val;
+    private EditText et_name;
     private int position;
 //    final String ATTRIBUTE_NAME_TEXT = "purchase_value";
 //    final String ATTRIBUTE_NAME_DIR = "purchase_dir";
@@ -24,17 +26,20 @@ public class Activity_two extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two);
 
-        et = findViewById(R.id.etValue);
+        et_val = (EditText) findViewById(R.id.etValue);
+        et_name = (EditText) findViewById(R.id.etName);
 //        Button btnSave = findViewById(R.id.btnSave);
 //        Button btnClose = findViewById(R.id.btnClose);
-        RadioButton rbMe = findViewById(R.id.rbMe);
-        RadioButton rbOther = findViewById(R.id.rbOther);
-        RadioButton rbhalf_to_me = findViewById(R.id.rbHalf_to_me);
-        RadioButton rbhalf_im = findViewById(R.id.rbHalf_im);
+        RadioButton rbMe = (RadioButton) findViewById(R.id.rbMe);
+        RadioButton rbOther = (RadioButton) findViewById(R.id.rbOther);
+        RadioButton rbhalf_to_me = (RadioButton) findViewById(R.id.rbHalf_to_me);
+        RadioButton rbhalf_im = (RadioButton) findViewById(R.id.rbHalf_im);
 
         Intent intent = getIntent();
         String dir = intent.getStringExtra(Main.ATTRIBUTE_NAME_DIR);
-        String value = intent.getStringExtra(Main.ATTRIBUTE_NAME_TEXT);
+        String name = intent.getStringExtra(Main.ATTRIBUTE_NAME);
+        String value = intent.getStringExtra(Main.ATTRIBUTE_NAME_VAL);
+        boolean swd = intent.getBooleanExtra(Main.SWITCH_DIRECTION, true);
         position = intent.getIntExtra(Main.ATTRIBUTE_NAME_POS, -1);
 
 //        if (intent.getBooleanExtra(Main.ATTRIBUTE_ME, false)){
@@ -42,6 +47,8 @@ public class Activity_two extends AppCompatActivity {
 //            rbOther.setVisibility(View.INVISIBLE);
 //        }
 
+        if (swd) rbhalf_to_me.setChecked(true);
+        else rbhalf_im.setChecked(true);
 
         if (getResources().getString(R.string.to_me).equals(dir)) {
             rbMe.setChecked(true);
@@ -56,7 +63,9 @@ public class Activity_two extends AppCompatActivity {
             rbhalf_im.setChecked(true);
         }
 
-        et.setText(value);
+        et_val.setText(value);
+        et_name.setText(name);
+
 //        showInputMethod();
 //        et.requestFocus();
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -72,10 +81,10 @@ public class Activity_two extends AppCompatActivity {
 
     public void onSave(View view) {
         String dir = "";
-        RadioButton rbMe = findViewById(R.id.rbMe);
-        RadioButton rbOther = findViewById(R.id.rbOther);
-        RadioButton rbhalf_to_me = findViewById(R.id.rbHalf_to_me);
-        RadioButton rbhalf_im = findViewById(R.id.rbHalf_im);
+        RadioButton rbMe = (RadioButton) findViewById(R.id.rbMe);
+        RadioButton rbOther = (RadioButton) findViewById(R.id.rbOther);
+        RadioButton rbhalf_to_me = (RadioButton) findViewById(R.id.rbHalf_to_me);
+        RadioButton rbhalf_im = (RadioButton) findViewById(R.id.rbHalf_im);
         if (rbMe.isChecked()) {
             dir = getResources().getString(R.string.to_me);
         } else
@@ -89,7 +98,8 @@ public class Activity_two extends AppCompatActivity {
                         dir = getResources().getString(R.string.in_half_im);
                     }
         Intent intent = new Intent();
-        intent.putExtra(Main.ATTRIBUTE_NAME_TEXT, et.getText().toString());
+        intent.putExtra(Main.ATTRIBUTE_NAME_VAL, et_val.getText().toString());
+        intent.putExtra(Main.ATTRIBUTE_NAME, et_name.getText().toString());
         intent.putExtra(Main.ATTRIBUTE_NAME_DIR, dir);
         intent.putExtra(Main.ATTRIBUTE_NAME_POS, position);
         setResult(RESULT_OK, intent);

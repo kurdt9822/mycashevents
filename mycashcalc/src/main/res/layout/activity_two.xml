@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
+    android:gravity="top"
     android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/val_name"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/etValue"
@@ -12,7 +21,9 @@
         android:ems="10"
         android:gravity="bottom"
         android:hint="@string/val_discr"
-        android:inputType="phone" />
+        android:inputType="phone" >
+        <requestFocus />
+    </EditText>
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -48,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:checked="true"
+            android:checked="false"
             android:text="@string/in_half_to_me" />
 
     </RadioGroup>
@@ -66,7 +77,8 @@
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:onClick="onSave"
-            android:text="@string/save" />
+            android:text="@string/save"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btnClose"
@@ -75,7 +87,8 @@
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:onClick="onClose"
-            android:text="@string/close" />
+            android:text="@string/close"
+            tools:ignore="ButtonStyle" />
     </LinearLayout>
 
     <ScrollView

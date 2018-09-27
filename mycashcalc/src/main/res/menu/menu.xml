@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:id="@+id/group_one">
+        <item
+            android:id="@+id/mnLoad"
+            android:title="@string/load_last" />
         <item
             android:id="@+id/mnAdd"
             android:title="@string/add" />
@@ -9,14 +14,17 @@
             android:id="@+id/mnDellAll"
             android:title="@string/delete_all" />
         <item
-            android:id="@+id/mnExit"
-            android:title="@string/exit" />
-        <item
             android:id="@+id/mnSave"
             android:title="@string/save_last" />
         <item
-            android:id="@+id/mnLoad"
-            android:title="@string/load_last" />
+            android:id="@+id/mnUploadToFtp"
+            android:title="@string/upload_to_ftp" />
+        <item
+            android:id="@+id/mnLoadFromFtp"
+            android:title="@string/load_from_ftp" />
+        <item
+            android:id="@+id/mnCalc"
+            android:title="@string/calc" />
     </group>
     <group android:id="@+id/group_two">
         <item
