@@ -9,6 +9,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/mycashcalc" />
+            <option value="$PROJECT_DIR$/mypost_gettestapp" />
+            <option value="$PROJECT_DIR$/mywidget" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

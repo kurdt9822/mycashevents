@@ -1,1 +1,1 @@
-include ':mycashcalc'
+include ':mycashcalc', ':mypost_gettestapp', ':mywidget'
