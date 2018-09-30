@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class Main extends AppCompatActivity implements MyAdapter.MyCallBack {
+public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dialog1.CallBack {
 
     private static final int BUFFER_SIZE = 4096;
     static final int DB_VERSION = 1;
@@ -282,33 +282,18 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack {
         }
 //        m.clear();
         saveList();
-//        AlertDialog.Builder ad = new AlertDialog.Builder(this);
-//        ad.setMessage(String.valueOf(f_prev));
-//        ad.setTitle(R.string.result);
-//        ad.setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//            }
-//        });
-//        ad.setNegativeButton(R.string.upload_to_ftp, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-////                uploadToFTP();
-//            }
-//        });
-//        ad.show();
-
         DialogFragment dlg1 = new Dialog1();
-//        Bundle args = new Bundle(1);
-//        args.putString("message", String.valueOf(f_prev));
-//        args.putString("title", getResources().getString(R.string.result));
+        ((Dialog1) dlg1).registerCallback(this);
+        Bundle args = new Bundle(1);
+        args.putString("message", String.valueOf(f_prev));
+        args.putString("title", getResources().getString(R.string.result));
+        args.putString("p_button", getResources().getString(R.string.close));
+        args.putString("n_button", getResources().getString(R.string.upload_to_ftp));
 //        args.putInt("keyCount", 2);
 //        String[] str_arr = {getResources().getString(R.string.close), getResources().getString(R.string.upload_to_ftp)};
 //        args.putStringArray("keyArr", str_arr);
-//        dlg1.setArguments(args);
-
-        dlg1.show(getFragmentManager(), "resultDlg");
+        dlg1.setArguments(args);
+        dlg1.show(getFragmentManager(), "result");
 
 //        Toast.makeText(this, Float.toString(f), Toast.LENGTH_SHORT).show();
     }
@@ -356,41 +341,56 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack {
                 saveList();
                 break;
             case R.id.mnUploadToFtp:
-                int res = 0;
-                if (DB_PATH.isEmpty()) {
-                    DB_PATH = getDbName();
-                }
-                MyAsyncTask mt = new MyAsyncTask();
-                mt.execute("1", DB_PATH);
-                try {
-                    res = mt.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    Log.e(LOG_TAG, e.getMessage());
-                }
-                if (res == 1) Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
-                else Toast.makeText(this, "Upload error, read catlog", Toast.LENGTH_SHORT).show();
+                uploadToFTP();
                 break;
             case R.id.mnLoadFromFtp:
 
-                AlertDialog.Builder ad = new AlertDialog.Builder(this);
-                ad.setMessage(R.string.dialog_question);
-                ad.setTitle(R.string.dialog_question);
-                ad.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        loadFromFTP();
-                    }
-                });
-                ad.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+                DialogFragment dlg1 = new Dialog1();
+                ((Dialog1) dlg1).registerCallback(this);
+                Bundle args = new Bundle(1);
+                args.putString("message", getResources().getString(R.string.dialog_question));
+                args.putString("title", getResources().getString(R.string.dialog_question));
+                args.putString("p_button", getResources().getString(R.string.ok));
+                args.putString("n_button", getResources().getString(R.string.exit));
+                dlg1.setArguments(args);
+                dlg1.show(getFragmentManager(), "loadfromftp");
 
-                ad.show();
+
+//                AlertDialog.Builder ad = new AlertDialog.Builder(this);
+//                ad.setMessage(R.string.dialog_question);
+//                ad.setTitle(R.string.dialog_question);
+//                ad.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        loadFromFTP();
+//                    }
+//                });
+//                ad.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                    }
+//                });
+//
+//                ad.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void uploadToFTP(){
+        int res = 0;
+        if (DB_PATH.isEmpty()) {
+            DB_PATH = getDbName();
+        }
+        MyAsyncTask mt = new MyAsyncTask();
+        mt.execute("1", DB_PATH);
+        try {
+            res = mt.get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e(LOG_TAG, e.getMessage());
+        }
+        if (res == 1) Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(this, "Upload error, read catlog", Toast.LENGTH_SHORT).show();
     }
 
     private void loadFromFTP() {
@@ -607,6 +607,29 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack {
     @Override
     public void longTapCallingBack(int position) { }
 
+    @Override
+    public void p_buttonClick(String tag) {
+        switch (tag) {
+            case "result": break;
+            case "loadfromftp":
+                loadFromFTP();
+                break;
+            default: break;
+        }
+    }
+
+    @Override
+    public void n_buttonClick(String tag) {
+        switch (tag) {
+            case "result":
+                // upload_to_ftp
+                uploadToFTP();
+                break;
+            case "loadfromftp":
+                break;
+            default: break;
+        }
+    }
 }
 
 
