@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Расчет суммы чеков</string>
-    <string name="act_one">Список покупок</string>
     <string name="sw_menu_flag">За продукты платил я</string>
     <string name="val_edit">Редактирование суммы</string>
     <string name="save">Сохранить</string>
@@ -18,7 +17,6 @@
     <string name="delete">Удалить строку</string>
     <string name="calc">Расчитать</string>
     <string name="ok">OK</string>
-    <string name="select">Выбрать</string>
     <string name="result">Результат расчетов</string>
     <!--<string name="empty">Пусто</string>-->
     <string name="delete_all">Удалить все</string>

@@ -20,15 +20,14 @@ import java.util.Map;
 public class Activity_list extends AppCompatActivity {
 
 private Map<String, Object> m;
-private ListView lvMain;
-private SimpleAdapter sAdapter;
+    private SimpleAdapter sAdapter;
     private final ArrayList<Map<String, Object>> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        lvMain = (ListView) findViewById(R.id.lvMain);
+        ListView lvMain = (ListView) findViewById(R.id.lvMain);
         // устанавливаем режим выбора пунктов списка
         lvMain.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 

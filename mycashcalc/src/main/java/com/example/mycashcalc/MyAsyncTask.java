@@ -1,8 +1,11 @@
 package com.example.mycashcalc;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -22,6 +25,13 @@ public class MyAsyncTask extends AsyncTask<String, Void, Integer> {
     private static final String fileDir = "tmp";
 //    private static final String fileName = "111";
 
+    @SuppressLint("StaticFieldLeak")
+    private Context mContext;
+
+    public MyAsyncTask(Context context){
+        mContext = context;
+    }
+
     @Override
     protected Integer doInBackground(String... opers) {
         int i = 0;
@@ -35,6 +45,8 @@ public class MyAsyncTask extends AsyncTask<String, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer result) {
+        if (result == 1) Toast.makeText(mContext, "Load succesful", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(mContext, "Load error, read catlog", Toast.LENGTH_SHORT).show();
         super.onPostExecute(result);
     }
 

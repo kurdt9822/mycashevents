@@ -1,41 +1,27 @@
 package com.example.mycashcalc;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dialog1.CallBack {
 
-    private static final int BUFFER_SIZE = 4096;
     static final int DB_VERSION = 1;
 //    final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     static final String LOG_TAG = "myLogs";
@@ -69,9 +55,6 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
     private final int REQUEST_CODE_CREATE = 1;
     private final int REQUEST_CODE_EDIT = 2;
     private final int REQUEST_CODE_LIST = 3;
-
-    private final int DIALOG_CODE_CALC = 1;
-    private final int DIALOG_CODE_UPLOAD = 2;
 
 
 //    private final int F_ME = 0;
@@ -382,35 +365,35 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
         if (DB_PATH.isEmpty()) {
             DB_PATH = getDbName();
         }
-        MyAsyncTask mt = new MyAsyncTask();
+        MyAsyncTask mt = new MyAsyncTask(this);
         mt.execute("1", DB_PATH);
-        try {
-            res = mt.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(LOG_TAG, e.getMessage());
-        }
-        if (res == 1) Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
-        else Toast.makeText(this, "Upload error, read catlog", Toast.LENGTH_SHORT).show();
+//        try {
+//            res = mt.get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            Log.e(LOG_TAG, e.getMessage());
+//        }
+//        if (res == 1) Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
+//        else Toast.makeText(this, "Upload error, read catlog", Toast.LENGTH_SHORT).show();
     }
 
     private void loadFromFTP() {
         if (DB_PATH.isEmpty()) {
             DB_PATH = getDbName();
         }
-        MyAsyncTask mt = new MyAsyncTask();
+        MyAsyncTask mt = new MyAsyncTask(this);
         mt.execute("2", DB_PATH);
-        int res = 0;
-        try {
-            res = mt.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(LOG_TAG, e.getMessage());
-        }
-        if (res == 1) {
-            Toast.makeText(Main.this, "Load succesful", Toast.LENGTH_SHORT).show();
-            deleteAllItems();
-            CURR_ID = null;
-        }
-        else Toast.makeText(Main.this, "Load error, read catlog", Toast.LENGTH_SHORT).show();
+//        int res = 0;
+//        try {
+//            res = mt.get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            Log.e(LOG_TAG, e.getMessage());
+//        }
+//        if (res == 1) {
+//            Toast.makeText(Main.this, "Load succesful", Toast.LENGTH_SHORT).show();
+//            deleteAllItems();
+//            CURR_ID = null;
+//        }
+//        else Toast.makeText(Main.this, "Load error, read catlog", Toast.LENGTH_SHORT).show();
     }
 
     private void showListEvents() {
@@ -518,9 +501,6 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
         }
         db.endTransaction();
         dbh.close();
-    }
-
-    private void saveToGoogleDrive() {
     }
 
     private void insertListView(SQLiteDatabase db, String tabName, ArrayList<ListItem> arr, Long id){
