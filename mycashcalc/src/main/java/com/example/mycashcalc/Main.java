@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -98,7 +99,7 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
         myAdapter = new MyAdapter(this, data_arr, this);
         ListView lvSimple = (ListView) findViewById(R.id.lvSimple);
         lvSimple.setAdapter(myAdapter);
-
+//        lvSimple.setBackgroundColor(Color.GRAY);
         registerForContextMenu(lvSimple);
 
     }

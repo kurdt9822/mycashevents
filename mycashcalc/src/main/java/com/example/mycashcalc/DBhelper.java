@@ -7,12 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 class DBhelper extends SQLiteOpenHelper {
 
     public String databasePath = "";
+    private Context ctx;
 
     public DBhelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         databasePath = context.getDatabasePath(name).getAbsolutePath();
         if (Main.DB_PATH != null) Main.DB_PATH = databasePath;
-//        Log.d(Main.LOG_TAG, Main.DB_PATH);
     }
 
     @Override

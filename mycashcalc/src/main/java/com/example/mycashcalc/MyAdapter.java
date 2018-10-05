@@ -1,6 +1,7 @@
 package com.example.mycashcalc;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
@@ -54,6 +55,8 @@ public class MyAdapter extends BaseAdapter {
         if (view == null) {
             view = lInflater.inflate(R.layout.myitem, parent, false);
         }
+
+//        view.setBackgroundColor(Color.DKGRAY);
 
         ListItem li = getListItem(position);
 
