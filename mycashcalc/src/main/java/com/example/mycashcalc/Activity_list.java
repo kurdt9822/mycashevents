@@ -108,41 +108,38 @@ private Map<String, Object> m;
     }
 
     private boolean delete_all_events() {
-        try {
-            DBhelper dbh = new DBhelper(this, Main.DB_NAME, null, Main.DB_VERSION);
-            SQLiteDatabase db = dbh.getWritableDatabase();
-            db.beginTransaction();
-            db.delete(Main.PURCHASES_TABLE, null, null);
-            db.delete(Main.EVENTS_TABLE, null, null);
-            db.setTransactionSuccessful();
-            db.endTransaction();
-            dbh.close();
-        } catch (Exception e) {
-            Log.e(Main.LOG_TAG, e.getMessage());
-            return false;
-        }
+//        try {
+//            DBhelper dbh = new DBhelper(this, Main.DB_NAME, null, Main.DB_VERSION);
+//            SQLiteDatabase db = dbh.getWritableDatabase();
+//            db.beginTransaction();
+//            db.delete(Main.PURCHASES_TABLE, null, null);
+//            db.delete(Main.EVENTS_TABLE, null, null);
+//            db.setTransactionSuccessful();
+//            db.endTransaction();
+//            dbh.close();
+//        } catch (Exception e) {
+//            Log.e(Main.LOG_TAG, e.getMessage());
+//            return false;
+//        }
         return true;
     }
 
     private void getList() {
-        DBhelper dbh = new DBhelper(this, Main.DB_NAME, null, Main.DB_VERSION);
-        SQLiteDatabase db = dbh.getWritableDatabase();
-        Cursor c = db.query(Main.EVENTS_TABLE, null, null, null, null, null, null);
-        if (c != null){
-            if (c.moveToFirst()){
-                do {
-                    m = new HashMap<>();
-//                    m.clear();
-                    m.put(Main.ATTRIBUTE_NAME_ID, c.getString(c.getColumnIndex(Main.ATTRIBUTE_NAME_ID)));
-                    m.put(Main.ATTRIBUTE_NAME_DATE, c.getString(c.getColumnIndex(Main.ATTRIBUTE_NAME_DATE)));
-                    // добавляем его в коллекцию
-                    data.add(m);
-                } while (c.moveToNext());
-            }
-            c.close();
-        }
-        dbh.close();
-//        return res;
+//        DBhelper dbh = new DBhelper(this, Main.DB_NAME, null, Main.DB_VERSION);
+//        SQLiteDatabase db = dbh.getWritableDatabase();
+//        Cursor c = db.query(Main.EVENTS_TABLE, null, null, null, null, null, null);
+//        if (c != null){
+//            if (c.moveToFirst()){
+//                do {
+//                    m = new HashMap<>();
+//                    m.put(Main.ATTRIBUTE_NAME_ID, c.getString(c.getColumnIndex(Main.ATTRIBUTE_NAME_ID)));
+//                    m.put(Main.ATTRIBUTE_NAME_DATE, c.getString(c.getColumnIndex(Main.ATTRIBUTE_NAME_DATE)));
+//                    data.add(m);
+//                } while (c.moveToNext());
+//            }
+//            c.close();
+//        }
+//        dbh.close();
     }
 
 }

@@ -13,8 +13,7 @@
         android:ems="10"
         android:hint="@string/val_name"
         android:inputType="textPersonName"
-        android:importantForAutofill="no" />
-
+         />
     <EditText
         android:id="@+id/etValue"
         android:layout_width="match_parent"
@@ -22,7 +21,8 @@
         android:ems="10"
         android:gravity="bottom"
         android:hint="@string/val_discr"
-        android:inputType="phone" >
+        android:inputType="phone"
+        >
         <requestFocus />
     </EditText>
 

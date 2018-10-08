@@ -15,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 
 public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dialog1.CallBack {
 
-    static final int DB_VERSION = 1;
 //    final String ANDROID_ID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     static final String LOG_TAG = "myLogs";
 //    static final String FILENAME = "myFile";
@@ -38,9 +39,10 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
     private static final int CM_ADD_ID = 2;
     private static final int CM_EDIT_ID = 3;
 
-    static final String DB_NAME = "mycashcalc";
-    static final String EVENTS_TABLE = "events";
-    static final String PURCHASES_TABLE = "purchases";
+//    static final int DB_VERSION = 1;
+//    static final String DB_NAME = "mycashcalc";
+//    static final String EVENTS_TABLE = "events";
+//    static final String PURCHASES_TABLE = "purchases";
     static final String SWITCH_DIRECTION = "switch_direction";
 
     // имена атрибутов для Map
@@ -50,7 +52,7 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
     static final String ATTRIBUTE_NAME_POS = "position";
     static final String ATTRIBUTE_NAME_ID = "event_id";
     static final String ATTRIBUTE_NAME_DATE = "event_date";
-    static String DB_PATH = "";
+//    static String DB_PATH = "";
 //    static final String ATTRIBUTE_ME = "me_flag";
 
     private final int REQUEST_CODE_CREATE = 1;
@@ -63,7 +65,10 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
 
 //    private SimpleAdapter sAdapter;
 //    private final ArrayList<Map<String, Object>> data_arr = new ArrayList<>();
-    private MyAdapter myAdapter;
+    private DB db;
+    private Cursor cursor;
+//    private MyAdapter myAdapter;
+    private SimpleCursorAdapter myAdapter;
     private final ArrayList<ListItem> data_arr = new ArrayList<>();
 //    private Map<String, Object> m;
 //    private ListItem item;
@@ -95,13 +100,27 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
 //        lvSimple.setAdapter(sAdapter);
 //        registerForContextMenu(lvSimple);
 
+        db = new DB(this);
+        db.open();
 
-        myAdapter = new MyAdapter(this, data_arr, this);
+        cursor = db.getData(DB.PURCHASES_TABLE,null, DB.EVENT_ID+" = ?", new String[] { "-1" }, null, null, null);
+        String[] from = new String[] {DB.PURCHASE_DIR, DB.PURCHASE_NAME, DB.PURCHASE_VALUE};
+        int[] to = new int[] {R.id.tvDirection, R.id.tvDescr, R.id.tvPrice};
+
+        myAdapter = new SimpleCursorAdapter(this, R.layout.myitem, cursor, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+//        myAdapter = new MyAdapter(this, data_arr, this);
         ListView lvSimple = (ListView) findViewById(R.id.lvSimple);
         lvSimple.setAdapter(myAdapter);
 //        lvSimple.setBackgroundColor(Color.GRAY);
         registerForContextMenu(lvSimple);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
     }
 
     private void add_string(String name, String dir, String value) {
@@ -273,13 +292,8 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
         args.putString("title", getResources().getString(R.string.result));
         args.putString("p_button", getResources().getString(R.string.close));
         args.putString("n_button", getResources().getString(R.string.upload_to_ftp));
-//        args.putInt("keyCount", 2);
-//        String[] str_arr = {getResources().getString(R.string.close), getResources().getString(R.string.upload_to_ftp)};
-//        args.putStringArray("keyArr", str_arr);
         dlg1.setArguments(args);
         dlg1.show(getFragmentManager(), "result");
-
-//        Toast.makeText(this, Float.toString(f), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -297,12 +311,12 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
     }
 
 
-    private String getDbName() {
-        DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
-        String str =  dbh.databasePath;
-        dbh.close();
-        return str;
-    }
+//    private String getDbName() {
+//        DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
+//        String str =  dbh.databasePath;
+//        dbh.close();
+//        return str;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -338,63 +352,26 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
                 args.putString("n_button", getResources().getString(R.string.exit));
                 dlg1.setArguments(args);
                 dlg1.show(getFragmentManager(), "loadfromftp");
-
-
-//                AlertDialog.Builder ad = new AlertDialog.Builder(this);
-//                ad.setMessage(R.string.dialog_question);
-//                ad.setTitle(R.string.dialog_question);
-//                ad.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        loadFromFTP();
-//                    }
-//                });
-//                ad.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                    }
-//                });
-//
-//                ad.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void uploadToFTP(){
-        int res = 0;
-        if (DB_PATH.isEmpty()) {
-            DB_PATH = getDbName();
-        }
-        MyAsyncTask mt = new MyAsyncTask(this);
-        mt.execute("1", DB_PATH);
-//        try {
-//            res = mt.get();
-//        } catch (InterruptedException | ExecutionException e) {
-//            Log.e(LOG_TAG, e.getMessage());
+//        int res = 0;
+//        if (DB_PATH.isEmpty()) {
+//            DB_PATH = getDbName();
 //        }
-//        if (res == 1) Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
-//        else Toast.makeText(this, "Upload error, read catlog", Toast.LENGTH_SHORT).show();
+//        MyAsyncTask mt = new MyAsyncTask(this);
+//        mt.execute("1", DB_PATH);
     }
 
     private void loadFromFTP() {
-        if (DB_PATH.isEmpty()) {
-            DB_PATH = getDbName();
-        }
-        MyAsyncTask mt = new MyAsyncTask(this);
-        mt.execute("2", DB_PATH);
-//        int res = 0;
-//        try {
-//            res = mt.get();
-//        } catch (InterruptedException | ExecutionException e) {
-//            Log.e(LOG_TAG, e.getMessage());
+//        if (DB_PATH.isEmpty()) {
+//            DB_PATH = getDbName();
 //        }
-//        if (res == 1) {
-//            Toast.makeText(Main.this, "Load succesful", Toast.LENGTH_SHORT).show();
-//            deleteAllItems();
-//            CURR_ID = null;
-//        }
-//        else Toast.makeText(Main.this, "Load error, read catlog", Toast.LENGTH_SHORT).show();
+//        MyAsyncTask mt = new MyAsyncTask(this);
+//        mt.execute("2", DB_PATH);
     }
 
     private void showListEvents() {
@@ -417,91 +394,62 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
 
     private Integer checkList(String id){
         int i = -1;
-        if (id != null) {
-                DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
-                SQLiteDatabase db = dbh.getWritableDatabase();
-                String selection = "event_id = ?";
-                String[] selectionArgs = new String[]{CURR_ID};
-                Cursor c = db.query(EVENTS_TABLE, null, selection, selectionArgs, null, null, null, null);
-                if (c != null) {
-                    i = c.getCount();
-                    c.close();
-                }
-                dbh.close();
-        }
+//        if (id != null) {
+//                DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
+//                SQLiteDatabase db = dbh.getWritableDatabase();
+//                String selection = "event_id = ?";
+//                String[] selectionArgs = new String[]{CURR_ID};
+//                Cursor c = db.query(EVENTS_TABLE, null, selection, selectionArgs, null, null, null, null);
+//                if (c != null) {
+//                    i = c.getCount();
+//                    c.close();
+//                }
+//                dbh.close();
+//        }
         return i;
     }
 
     private void updateList() {
-        if (CURR_ID != null){
-//        if (Integer.parseInt(CURR_ID) > 0){
-//            m = new HashMap<>();
-            ContentValues cv = new ContentValues();
-            DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
-            SQLiteDatabase db = dbh.getWritableDatabase();
-            db.beginTransaction();
-            cv.put("event_name", "sometext");
-            String where = "event_id = ?";
-            String[] whereArgs = new String[] {CURR_ID};
-            db.update(EVENTS_TABLE, cv, where, whereArgs);
-            db.delete(PURCHASES_TABLE, where, whereArgs);
-            try {
-                insertListView(db, PURCHASES_TABLE, data_arr, Long.parseLong(CURR_ID));
-            } catch (NumberFormatException e) {
-                Log.e(LOG_TAG, e.getMessage());
-                dbh.close();
-                return;
-            }
-            db.setTransactionSuccessful();
-//            currID = ll;
-            db.endTransaction();
-            dbh.close();
-        }
-
+//        if (CURR_ID != null){
+////        if (Integer.parseInt(CURR_ID) > 0){
+////            m = new HashMap<>();
+//            ContentValues cv = new ContentValues();
+//            DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
+//            SQLiteDatabase db = dbh.getWritableDatabase();
+//            db.beginTransaction();
+//            cv.put("event_name", "sometext");
+//            String where = "event_id = ?";
+//            String[] whereArgs = new String[] {CURR_ID};
+//            db.update(EVENTS_TABLE, cv, where, whereArgs);
+//            db.delete(PURCHASES_TABLE, where, whereArgs);
+//            try {
+//                insertListView(db, PURCHASES_TABLE, data_arr, Long.parseLong(CURR_ID));
+//            } catch (NumberFormatException e) {
+//                Log.e(LOG_TAG, e.getMessage());
+//                dbh.close();
+//                return;
+//            }
+//            db.setTransactionSuccessful();
+////            currID = ll;
+//            db.endTransaction();
+//            dbh.close();
+//        }
     }
 
     private void insertList() {
-
-//        try {
-//            // отрываем поток для записи
-//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(openFileOutput(FILENAME, MODE_APPEND)));
-//            // пишем данные
-//            Date currTime = Calendar.getInstance().getTime();
-//
-////            ContentValues cv = new ContentValues();
-//            for (int i = 0; i < data_arr.size(); i++) {
-//                m = new HashMap<>();
-//                m = data_arr.get(i);
-//                bw.write(currTime.toString()+";"+m.get(ATTRIBUTE_NAME_DIR).toString()+";"+m.get(ATTRIBUTE_NAME_TEXT).toString()+"#");
-////                cv.clear();
-////                cv.put(ATTRIBUTE_NAME_ID, id);
-////                cv.put(ATTRIBUTE_NAME_TEXT, m.get(ATTRIBUTE_NAME_TEXT).toString());
-////                cv.put(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
-////                db.insert(tabName, null, cv);
-//            }
-//
-//            // закрываем поток
-//            bw.close();
-//            Log.d(LOG_TAG, "Файл записан");
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
+//        ContentValues cv = new ContentValues();
+//        DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
+//        SQLiteDatabase db = dbh.getWritableDatabase();
+//        db.beginTransaction();
+//        cv.put("event_name", "sometext");
+//        Long id = db.insert(EVENTS_TABLE, null, cv);
+//        if (id != -1){
+//            insertListView(db, PURCHASES_TABLE, data_arr, id);
+//            db.setTransactionSuccessful();
+//            CURR_ID = String.valueOf(id);
 //        }
-
-        ContentValues cv = new ContentValues();
-        DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
-        SQLiteDatabase db = dbh.getWritableDatabase();
-        db.beginTransaction();
-        cv.put("event_name", "sometext");
-        Long id = db.insert(EVENTS_TABLE, null, cv);
-        if (id != -1){
-            insertListView(db, PURCHASES_TABLE, data_arr, id);
-            db.setTransactionSuccessful();
-            CURR_ID = String.valueOf(id);
-        }
-        db.endTransaction();
-        dbh.close();
+//        db.endTransaction();
+//        dbh.close();
     }
 
     private void insertListView(SQLiteDatabase db, String tabName, ArrayList<ListItem> arr, Long id){
@@ -522,38 +470,30 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
     }
 
     private boolean loadList(String id) {
-//        boolean res = false;
-        try {
-            DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
-            SQLiteDatabase db = dbh.getWritableDatabase();
-            Cursor c;
-//            Log.d(LOG_TAG, "return id = " + id);
-            String selection = "event_id = ?";
-            String[] selectionArgs = new String[] { id };
-            c = db.query(PURCHASES_TABLE, null, selection, selectionArgs, null, null, null);
-            if (c != null){
-                if (c.moveToFirst()){
-                    do {
-//                        m = new HashMap<>(2);
-                        ListItem li = new ListItem(c.getString(c.getColumnIndex(ATTRIBUTE_NAME)),
-                                c.getString(c.getColumnIndex(ATTRIBUTE_NAME_DIR)),
-                                c.getString(c.getColumnIndex(ATTRIBUTE_NAME_VAL)));
-//                        m.put(ATTRIBUTE_NAME_TEXT, c.getString(c.getColumnIndex(ATTRIBUTE_NAME_TEXT)));
-//                        m.put(ATTRIBUTE_NAME_DIR, c.getString(c.getColumnIndex(ATTRIBUTE_NAME_DIR)));
-                        data_arr.add(li);
-//                        Log.d(LOG_TAG, m.get("purchase_value").toString() + m.get("purchase_dir").toString());
-//                        m.clear();
-                    } while (c.moveToNext());
-//                sAdapter.notifyDataSetChanged();
-                }
-                c.close();
-            }
-            dbh.close();
-        } catch (Exception e) {
-            Log.e(LOG_TAG, e.getMessage());
-            return false;
-        }
-        CURR_ID = id;
+//        try {
+//            DBhelper dbh = new DBhelper(this, DB_NAME, null, DB_VERSION);
+//            SQLiteDatabase db = dbh.getWritableDatabase();
+//            Cursor c;
+//            String selection = "event_id = ?";
+//            String[] selectionArgs = new String[] { id };
+//            c = db.query(PURCHASES_TABLE, null, selection, selectionArgs, null, null, null);
+//            if (c != null){
+//                if (c.moveToFirst()){
+//                    do {
+//                        ListItem li = new ListItem(c.getString(c.getColumnIndex(ATTRIBUTE_NAME)),
+//                                c.getString(c.getColumnIndex(ATTRIBUTE_NAME_DIR)),
+//                                c.getString(c.getColumnIndex(ATTRIBUTE_NAME_VAL)));
+//                        data_arr.add(li);
+//                    } while (c.moveToNext());
+//                }
+//                c.close();
+//            }
+//            dbh.close();
+//        } catch (Exception e) {
+//            Log.e(LOG_TAG, e.getMessage());
+//            return false;
+//        }
+//        CURR_ID = id;
         return true;
     }
 
