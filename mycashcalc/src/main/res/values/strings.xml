@@ -25,4 +25,5 @@
     <string name="upload_to_ftp">Сохранить базу на сервер</string>
     <string name="load_from_ftp">Загрузить базу с сервера</string>
     <string name="dialog_question">Загрузить базу с сервера? Текущая база безвозвратно затрется</string>
+    <string name="error_save_database">Ошибка записи в базу данных, продолжение работы приложения более невозможно!</string>
 </resources>

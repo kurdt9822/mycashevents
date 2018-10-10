@@ -16,6 +16,7 @@ public class DB {
     static final String PURCHASES_TABLE = "purchases";
 //    static String DB_PATH = "";
 
+//    static final String EVENT_ID = "event_id";
     static final String EVENT_ID = "event_id";
     static final String EVENT_DATE = "event_date";
     static final String EVENT_NAME = "event_name";

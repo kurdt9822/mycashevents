@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -69,7 +70,8 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
     private Cursor cursor;
 //    private MyAdapter myAdapter;
     private SimpleCursorAdapter myAdapter;
-    private final ArrayList<ListItem> data_arr = new ArrayList<>();
+    private long currentEvent;
+//    private final ArrayList<ListItem> data_arr = new ArrayList<>();
 //    private Map<String, Object> m;
 //    private ListItem item;
 
@@ -102,8 +104,7 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
 
         db = new DB(this);
         db.open();
-
-        cursor = db.getData(DB.PURCHASES_TABLE,null, DB.EVENT_ID+" = ?", new String[] { "-1" }, null, null, null);
+        cursor = db.getData(DB.PURCHASES_TABLE, new String[] { "rowid _id", "*" }, DB.EVENT_ID+" = ?", new String[] { "0" }, null, null, null);
         String[] from = new String[] {DB.PURCHASE_DIR, DB.PURCHASE_NAME, DB.PURCHASE_VALUE};
         int[] to = new int[] {R.id.tvDirection, R.id.tvDescr, R.id.tvPrice};
 
@@ -114,7 +115,13 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
         lvSimple.setAdapter(myAdapter);
 //        lvSimple.setBackgroundColor(Color.GRAY);
         registerForContextMenu(lvSimple);
-
+        ContentValues cv = new ContentValues();
+        cv.put(DB.EVENT_NAME, "some events");
+        currentEvent = db.insertRec(DB.EVENTS_TABLE, cv);
+        if (currentEvent == -1) {
+            Toast.makeText(this, R.string.error_save_database, Toast.LENGTH_LONG).show();
+            onDestroy();
+        }
     }
 
     @Override
@@ -129,11 +136,11 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
 //        m.put(ATTRIBUTE_NAME_TEXT, value);
 //        m.put(ATTRIBUTE_NAME_DIR, dir);
 
-        ListItem item = new ListItem(name, dir, value);
+//        ListItem item = new ListItem(name, dir, value);
         // добавляем его в коллекцию
-        data_arr.add(item);
-
-        // уведомляем, что данные изменились
+//        data_arr.add(item);
+        ContentValues cv = new ContentValues();
+        db.insertRec(DB.PURCHASES_TABLE, cv);
         myAdapter.notifyDataSetChanged();
     }
 
@@ -150,6 +157,7 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo acmi;
+        int _id = -1;
         switch (item.getItemId()) {
             case CM_ADD_ID:
                 create_item();
@@ -158,17 +166,19 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
             case CM_EDIT_ID:
                 // получаем инфу о пункте списка
                 acmi = (AdapterContextMenuInfo) item.getMenuInfo();
-                ListItem lItem = null;
+//                ListItem lItem = null;
 //                m = new HashMap<>(1);
-                lItem = data_arr.get(acmi.position);
-
+//                lItem = data_arr.get(acmi.position);
+                cursor.moveToPosition(acmi.position);
+                _id = cursor.getInt(cursor.getColumnIndex(DB.PURCHASE_ID));
                 Intent intent = new Intent(this, Activity_two.class);
-                intent.putExtra(ATTRIBUTE_NAME, lItem.name);
-                intent.putExtra(ATTRIBUTE_NAME_DIR, lItem.direction);
-                intent.putExtra(ATTRIBUTE_NAME_VAL, lItem.price);
+                intent.putExtra(DB.PURCHASE_ID, _id);
+//                intent.putExtra(ATTRIBUTE_NAME, lItem.name);
+//                intent.putExtra(ATTRIBUTE_NAME_DIR, lItem.direction);
+//                intent.putExtra(ATTRIBUTE_NAME_VAL, lItem.price);
 //                intent.putExtra(ATTRIBUTE_NAME_DIR, m.get(ATTRIBUTE_NAME_DIR).toString());
 //                intent.putExtra(ATTRIBUTE_NAME_TEXT, m.get(ATTRIBUTE_NAME_TEXT).toString());
-                intent.putExtra(ATTRIBUTE_NAME_POS, acmi.position);
+//                intent.putExtra(ATTRIBUTE_NAME_POS, acmi.position);
                 intent.putExtra(SWITCH_DIRECTION, false);
 //                intent.putExtra(ATTRIBUTE_ME, checkToMeFlag());
 
@@ -180,7 +190,10 @@ public class Main extends AppCompatActivity implements MyAdapter.MyCallBack, Dia
                 // получаем инфу о пункте списка
                 acmi = (AdapterContextMenuInfo) item.getMenuInfo();
                 // удаляем Map из коллекции, используя позицию пункта в списке
-                data_arr.remove(acmi.position);
+                cursor.moveToPosition(acmi.position);
+                _id = cursor.getInt(cursor.getColumnIndex(DB.PURCHASE_ID));
+                db.deleteRec(DB.PURCHASES_TABLE, DB.PURCHASE_ID + "=?", new String[] {String.valueOf(_id)});
+//                data_arr.remove(acmi.position);
                 // уведомляем, что данные изменились
                 myAdapter.notifyDataSetChanged();
                 break;
